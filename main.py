@@ -38,10 +38,14 @@ class Board:
                     return
             else:
                 print(f"\nYou've landed on a property. {property}")
-                choice = input("Would you like to buy this property? \n")
+                choice = input(
+                    "Would you like to buy this property? \n" "Choices: {y, n}"
+                )
                 while choice not in self.propertyChoices:
                     print("\nInvalid choice...")
-                    choice = input("Would you like to buy this property? \n")
+                    choice = input(
+                        "Would you like to buy this property? \n" "Choices: {y, n}"
+                    )
 
                 if choice == "y":
                     if player.money <= property.price:
@@ -108,6 +112,7 @@ class Player:
             if choice == "pay":
                 if self.money > 50:
                     self.money -= 50
+                    print("You're now out of jail!")
                     print(f"{self.name}'s balance is now: ${self.money}")
                     self.inJail = False
                     return
@@ -120,6 +125,10 @@ class Player:
                 dice1, dice2, _ = self.roll()
                 if dice1 == dice2:
                     self.inJail = False
+                    print("You rolled doubles... You're free!")
+                    return
+
+                print("You did not roll doubles... You stay in jail.")
                 return
             elif choice == "stay":
                 return
@@ -141,6 +150,7 @@ class Player:
             self.inJail = True
 
         if dice1 == dice2:
+            print("You rolled doubles! Roll again!")
             self.turn(self.doubles + 1)
 
 
@@ -153,7 +163,7 @@ class Property:
 
     def __repr__(self):
         return (
-            f"Property @ Tile {self.location}"
+            f"Property @ Tile {self.location+1}"
             f"(Price: ${self.price}, Rent: ${self.rent})"
         )
 
@@ -169,3 +179,5 @@ while players and len(players) > 1:
         if player.money <= 0:
             players.remove(player)
             print(f"{player.name} is out of money and has lost!")
+
+print("The winner is:", players[0].name)
